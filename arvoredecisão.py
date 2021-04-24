@@ -54,7 +54,7 @@ df = df_va.transform(df)
 df_transformed = df.select(['features','label'])
 
 train_df, test_df = df_transformed.randomSplit([0.75,0.25])
-model = NaiveBayes(labelCol='label')
+model = DecisionTreeClassifier(labelCol='label')
 trained_model = model.fit(train_df)
 
 test_predictions = trained_model.transform(test_df)

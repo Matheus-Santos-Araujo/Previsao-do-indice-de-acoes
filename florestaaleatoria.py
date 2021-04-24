@@ -71,13 +71,17 @@ print("Predições corretas: ", cp.count())
 accuracy = (cp.count()) /  test_df_count_1
 print(f"Acurácia: {accuracy}\n")
 
-fp = train_predictions.filter(
+fp = test_predictions.filter(
 test_predictions['label'] == 0).filter(
 test_predictions['prediction'] == 1).select(
+['label','prediction','probability'])
+
 print("Falsos positivos: ", fp.count())
 
-fn = train_predictions.filter(
+fn = test_predictions.filter(
 test_predictions['label'] == 1).filter(
 test_predictions['prediction'] == 0).select(
 ['label','prediction','probability'])
+
 print("Falsos negativos: ", fn.count())
+
