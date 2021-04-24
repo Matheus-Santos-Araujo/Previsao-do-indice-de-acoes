@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics import confusion_matrix
 plt.style.use('ggplot')
 
 dfp = pd.read_csv('previsaodeacoes.csv')
@@ -117,4 +118,17 @@ test_predictions['prediction'] == 0).select(
 ['label','prediction','probability'])
 
 print("Falsos negativos: ", fn.count())
+
+cm = confusion_matrix(test_df,test_predictions)
+class_names=[0,1]
+fig, ax = plt.subplots()
+tick_marks = np.arange(len(class_names))
+plt.xticks(tick_marks, class_names)
+plt.yticks(tick_marks, class_names)
+sns.heatmap(pd.DataFrame(cm), annot=True, cmap="RdGy" ,fmt='g')
+ax.xaxis.set_label_position("top")
+plt.tight_layout()
+plt.title('Matriz de confusão', y=1.1)
+plt.ylabel('Label real')
+plt.xlabel('Label predita')
 
