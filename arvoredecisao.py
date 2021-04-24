@@ -119,10 +119,10 @@ test_predictions['prediction'] == 0).select(
 
 print("Falsos negativos: ", fn.count())
 
-#atual = np.array(df.select("height", "weight", "gender").collect())
-#predito = np.array(df.select("height", "weight", "gender").collect()) 
+real = np.array(test_df.select("label").collect())
+predito = np.array(test_predictions.select("label").collect())
 
-cm = confusion_matrix(test_df, test_predictions)
+cm = confusion_matrix(real, predito)
 class_names=[0,1] 
 fig, ax = plt.subplots()
 tick_marks = np.arange(len(class_names))
