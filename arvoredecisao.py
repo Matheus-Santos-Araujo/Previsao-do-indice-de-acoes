@@ -5,7 +5,7 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import DecisionTreeClassifier
 
 
-df = spark.read.csv('previsaoacoes.csv', inferSchema=True, header=True)
+df = spark.read.csv('previsaodeacoes.csv', inferSchema=True, header=True)
 
 class_indexer = StringIndexer(inputCol="LABEL", outputCol="label")
 
