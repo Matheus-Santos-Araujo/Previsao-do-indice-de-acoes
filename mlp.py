@@ -2,7 +2,7 @@ spark = SparkSession.builder.appName('classification').getOrCreate()
 
 from pyspark.ml.feature import StringIndexer, OneHotEncoder
 from pyspark.ml.feature import VectorAssembler
-from pyspark.ml.classification import DecisionTreeClassifier
+from pyspark.ml.classification import MultilayerPerceptronClassifier
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -87,11 +87,18 @@ df_va = VectorAssembler(inputCols = inputCols, outputCol="features")
 df = df_va.transform(df)
 df_transformed = df.select(['features','label'])
 
+normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
+df_transformed = normalizer.transform(df_transformed)
+
 train_df, test_df = df_transformed.randomSplit([0.75,0.25])
-model = DecisionTreeClassifier(labelCol='label')
-trained_model = model.fit(train_df)
+layers = [12, 50, 40, 2]
+
+# create the trainer and set its parameters
+trainer = MultilayerPerceptronClassifier(maxIter=3000, layers=layers)
 
 test_predictions = trained_model.transform(test_df)
+
+model = trainer.fit(train_df)
 
 test_df_count_1 = test_df.filter(test_df['label'] == 1).count()
 test_df_count_0 = test_df.filter(test_df['label'] == 0).count()
