@@ -1,3 +1,13 @@
+import findspark
+from pyspark.sql import SparkSession
+
+findspark.init()
+
+spark = SparkSession.builder \
+        .master("local[*]") \
+        .appName("pca") \
+        .getOrCreate()
+
 from pyspark.ml.feature import PCA as PCAml
 from pyspark.ml.linalg import Vectors
 from pyspark.ml.feature import StringIndexer, OneHotEncoder
@@ -10,9 +20,6 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 from pyspark.ml.feature import Normalizer
 plt.style.use('ggplot')
-
-# -2.9553000000598913E8,-24849.183523763088,-991.5847421831801,-202.50010437850668,-309.7490503709463] |
-#|[-2.3276000000606304E8,-25198.09829572037,-948.909343254969,45.905707192742845,-67.25181221912796] 
 
 df = spark.read.csv('previsaodeacoes.csv', inferSchema=True, header=True)
 
@@ -60,8 +67,8 @@ inputCols=[
 
 df_va = VectorAssembler(inputCols = inputCols, outputCol="features")
 df = df_va.transform(df)
-#normalizer = Normalizer(inputCol=inputCols, outputCol="normfeatures", p=1.0)
-#df = normalizer.transform(df)
+normalizer = Normalizer(inputCol=inputCols, outputCol="normfeatures", p=1.0)
+df = normalizer.transform(df)
 df_transformed = df.select(['features','label'])
 
 normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
@@ -88,12 +95,14 @@ for i in range(1, kcomp+1):
     colname.append("PC"+str(i))
 
 name = colname
-values = pca_var
-
-#name = ["PCA1", "PCA2"]
-#values = [100, 0]    
+values = pca_var 
 
 fig, ax = plt.subplots(figsize=(9, 3), sharey=True)
 ax.bar(name, values)
 fig.suptitle('Relevancia de cada componente')
 plt.savefig("pca.png")
+
+# train_df, test_df = transformed.randomSplit([0.75,0.25])
+# model = DecisionTreeClassifier(labelCol='label', featuresCol='normFeatures')
+# trained_model = model.fit(train_df)
+# test_predictions = trained_model.transform(test_df)
