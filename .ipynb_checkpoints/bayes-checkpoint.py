@@ -68,7 +68,7 @@ df_va = VectorAssembler(inputCols = inputCols, outputCol="features")
 df = df_va.transform(df)
 df_transformed = df.select(['features','label'])
 
-normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
+normalizer = Normalizer(inputCol="features", outputCol="features", p=1.0)
 df_transformed = normalizer.transform(df_transformed)
 
 train_df, test_df = df_transformed.randomSplit([0.75,0.25])

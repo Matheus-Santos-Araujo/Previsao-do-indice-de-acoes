@@ -50,6 +50,7 @@ def criafigura(G, corr_direction, min_correlation):
                           edge_vmin = min(weights), edge_vmax=max(weights))
 
     plt.axis('off')
+    plt.show()
     plt.savefig("grafo" + corr_direction + str(min_correlation) + ".png", format="PNG")
 
 df = pd.read_csv('graficos.csv')

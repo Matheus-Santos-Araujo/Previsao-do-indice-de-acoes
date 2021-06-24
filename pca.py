@@ -67,16 +67,16 @@ inputCols=[
 
 df_va = VectorAssembler(inputCols = inputCols, outputCol="features")
 df = df_va.transform(df)
-normalizer = Normalizer(inputCol=inputCols, outputCol="normfeatures", p=1.0)
-df = normalizer.transform(df)
+#normalizer = Normalizer(inputCol=inputCols, outputCol="normfeatures", p=1.0)
+#df = normalizer.transform(df)
 df_transformed = df.select(['features','label'])
 
-normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
-df_transformed = normalizer.transform(df_transformed)
+#normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
+#df_transformed = normalizer.transform(df_transformed)
 
 kcomp = 2
 
-pca = PCAml(k=kcomp, inputCol="normFeatures", outputCol="pca")
+pca = PCAml(k=kcomp, inputCol="features", outputCol="pca")
 model = pca.fit(df_transformed)
 transformed = model.transform(df_transformed)
 transformed.printSchema()
